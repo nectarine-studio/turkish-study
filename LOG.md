@@ -2,6 +2,23 @@
 
 Newest entries go at the top. Each entry: date, what changed or was learned, and any open question.
 
+## 2026-11-19 (second set and study modes)
+
+Added the Elif Alışveriş Gidiyor set, spaced repetition, Learn mode, sentences, a mind map and AI images.
+- Elif set: 185 cards parsed from the Quizlet PDF. "keşke" was skipped because Set 122 already has the identical card, which leaves 184. Card 43 "Üzerine" had no definition in Quizlet, so "on, onto" was added. Check it.
+- Spelling fixes made while importing (check against the original): etrafında, Dolaşmak, zıplamak, Mağaza, Çabucak (was Çabırcak), Askılar, Bakacaktı (was Bakacatı), Çıkmak, artık, ayrılmak, Kaç derece (was devece), kusura bakma, Değişmek, değiştirmek, askılık, Atlıkarınca, İhtimale. English fixes: recipe, excuse me, apologies, what's more, and "tight, firm, close" (was "film"). Left unchanged because the right form was unclear: Birbirler, Hayranmak, sıcaklamak.
+- Elif words start at box 4 (strong) with reviews spread over eight days. A set can opt in through `seed` in `data.js`.
+- Eleven themes group all 247 cards. Assignments were made by hand in the generator and are easy to change in `THEMES`.
+- Sentences exist for Set 122 only (39 sentences, written by hand, not yet checked by a Turkish speaker). The Elif words still need sentences.
+- AI images: `src/worker.js` calls Workers AI at `/api/image`. It only accepts same-origin POST requests with a 3 to 400 character prompt. There is no rate limit, so anyone who finds the endpoint could use up the account's Workers AI allowance. Add Cloudflare Access or a rate limit if the site is shared widely.
+- Per the earlier rule, the app is now split into several files because a backend exists.
+- Not tested: the real Workers AI call (only a stand-in), and the deployed site. Browser tests ran locally and passed with no console errors.
+
+Open questions and next steps
+- Write sentences for the Elif words.
+- Sync progress and images across devices (D1 or KV), since both live in one browser today.
+- Add a daily new-card limit setting (fixed at 10 for now).
+
 ## 2026-11-19 (deploy)
 
 Cloudflare deploy failed with "This Worker does not exist on this account". No Worker named `turkish-study` existed and the repo had no Wrangler config.
