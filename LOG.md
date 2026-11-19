@@ -2,6 +2,12 @@
 
 Newest entries go at the top. Each entry: date, what changed or was learned, and any open question.
 
+## 2026-11-19 (deploy)
+
+Cloudflare deploy failed with "This Worker does not exist on this account". No Worker named `turkish-study` existed and the repo had no Wrangler config.
+- Added `wrangler.jsonc` (name `turkish-study`, static assets from `./public`) and moved `index.html` to `public/index.html`.
+- Cloudflare build settings: build command empty, deploy command `npx wrangler deploy`, production branch must be the branch that holds these files.
+
 ## 2026-11-19
 
 Started the project from a Quizlet export test (Set 122, 63 Turkish vocabulary cards).
@@ -13,7 +19,7 @@ Findings
 - Third-party scrapers and browser extensions exist, but they break often and may violate Quizlet's terms. Not used here.
 
 What was built
-- `index.html`: single-file prototype with Browse, Quiz and Import. Cards come from Set 122.
+- `public/index.html`: single-file prototype with Browse, Quiz and Import. Cards come from Set 122.
 - 11 Unsplash photos attached to 14 cards. Most of the set is personality traits and grammar words, which stock photos cover poorly.
 - The PDF export had some Turkish letters stripped. Diacritics were restored by hand (for example Yazin to Yazın, Yardimsever to Yardımsever) and words split across lines were rejoined. "Kışın" is a guess for "Kişin" and should be checked.
 

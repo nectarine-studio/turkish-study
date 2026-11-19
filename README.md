@@ -2,7 +2,7 @@
 
 A small study app for Turkish vocabulary, built from Quizlet exports with a photo on each card where one fits.
 
-The current version is a single file, `index.html`. Open it in a regular browser (double-click it). Photos load from Unsplash, so it needs an internet connection and will not show images inside sandboxed previews.
+The current version is a single file, `public/index.html`. Open it in a regular browser (double-click it). Photos load from Unsplash, so it needs an internet connection and will not show images inside sandboxed previews.
 
 ## Features
 
