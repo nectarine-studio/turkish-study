@@ -2,6 +2,14 @@
 
 Newest entries go at the top. Each entry: date, what changed or was learned, and any open question.
 
+## 2026-11-19 (Unsplash sweep, first pass)
+
+Added 32 Unsplash photos to the cards that had none, so 46 of 247 cards now have a photo (credit shown on each).
+- Mostly concrete words (objects, places, a few feelings). Photos were picked from the first search result for a short English query, so a few are loose matches (shelf, patient, flat landscape was skipped). Replace any card's photo from Browse with "Set URL" or "AI image".
+- Left alone for now: grammar and link words (diye, bile, ancak and similar), which have no good photo. The AI image button or a pasted URL suits those better.
+- The sweep stopped at 32 because each Unsplash search returns a large response and 150+ searches would overload a single session. A later pass can cover the remaining nouns and verbs.
+- `data.js` was edited directly this time, so the generator in `/home/claude/build` no longer reproduces it exactly. Treat `data.js` as the source of truth.
+
 ## 2026-11-19 (second set and study modes)
 
 Added the Elif Alışveriş Gidiyor set, spaced repetition, Learn mode, sentences, a mind map and AI images.
