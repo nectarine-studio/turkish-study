@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Turkish Set 122 · Study Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#faf7f2;--ink:#1d1b19;--muted:#6f6a63;--line:#e6e0d6;--card:#fff;--accent:#e8623c;--accent-d:#c94d2a;--ok:#2f8f5b;--bad:#c0392b}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 Inter,system-ui,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 20px 64px}
+  h1{font:800 34px/1.1 "Hanken Grotesk",sans-serif;letter-spacing:-1.5px;margin:0 0 6px}
+  .sub{color:var(--muted);margin:0 0 22px}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:22px}
+  button,.btn{font:600 14px Inter,sans-serif;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 14px;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-block}
+  button:hover,.btn:hover{border-color:var(--ink)}
+  button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  button.primary:hover{background:var(--accent-d);border-color:var(--accent-d)}
+  input[type=search],input[type=text],textarea{font:400 14px Inter,sans-serif;border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:#fff;color:var(--ink)}
+  input[type=search]{flex:1;min-width:180px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+  .card{perspective:900px;height:280px;cursor:pointer}
+  .inner{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+  .card.flip .inner{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+  .back{transform:rotateY(180deg);padding:18px;justify-content:center;background:#fff4ee}
+  .img{height:150px;background:#efe9de center/cover no-repeat;flex:none;position:relative}
+  .img.empty{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px}
+  .credit{position:absolute;left:6px;bottom:6px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;text-decoration:none}
+  .term{padding:14px 16px;font:700 19px/1.25 "Hanken Grotesk",sans-serif;letter-spacing:-.5px}
+  .num{position:absolute;top:8px;left:10px;font-size:11px;color:var(--muted)}
+  .def{font:500 18px/1.35 "Hanken Grotesk",sans-serif}
+  .tools{margin-top:auto;padding:0 12px 12px;display:flex;gap:8px;flex-wrap:wrap}
+  .tools a,.tools button{font-size:12px;padding:5px 9px}
+  .quiz{max-width:640px;margin:0 auto}
+  .qcard{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .qcard .img{height:220px}
+  .qterm{font:800 32px/1.15 "Hanken Grotesk",sans-serif;letter-spacing:-1.5px;padding:22px 24px 8px}
+  .opts{display:grid;gap:10px;padding:12px 24px 24px}
+  .opt{text-align:left;padding:13px 14px;font-weight:500}
+  .opt.ok{background:#e6f4ec;border-color:var(--ok)}
+  .opt.bad{background:#fbe9e7;border-color:var(--bad)}
+  .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-bottom:10px}
+  details{margin-top:28px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:12px 16px}
+  summary{cursor:pointer;font-weight:600}
+  textarea{width:100%;height:140px;margin:10px 0;font-family:ui-monospace,monospace}
+  .note{color:var(--muted);font-size:13px}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Turkish Vocabulary, Set 122</h1>
+  <p class="sub" id="sub"></p>
+
+  <div class="bar">
+    <button id="m-browse" class="on">Browse</button>
+    <button id="m-quiz">Quiz</button>
+    <input type="search" id="q" placeholder="Search terms or definitions">
+    <button id="only-img">Only with photos</button>
+  </div>
+
+  <div id="browse" class="grid"></div>
+
+  <div id="quiz" class="quiz hidden"></div>
+
+  <details>
+    <summary>Import another Quizlet export</summary>
+    <p class="note">In Quizlet, open a set, choose the three-dot menu, then Export. Keep the default separators (tab between term and definition, new line between cards) and paste the text here.</p>
+    <textarea id="imp" placeholder="term&#9;definition"></textarea>
+    <button class="primary" id="imp-go">Load cards</button>
+    <button id="imp-reset">Back to Set 122</button>
+    <p class="note">Imported cards start without photos. Use "Find photo" on a card to open an Unsplash search, then paste an image URL to attach it. Attached photos are saved in this browser only.</p>
+  </details>
+</div>
+
+<script>
+// Cleaned text from Quizlet export PDF (Set 122). Photo ids are Unsplash; credits shown on each image.
+const P = {
+  beach:   {id:"1507525428034-b723cf961d3e", by:"Sean Oulashin",   u:"oulashin",       s:"KMn4VEeEPR8"},
+  rain:    {id:"1527766833261-b09c3163a791", by:"Alex Dukhanov",   u:"argtone",        s:"ZxZQk7777R4"},
+  umbrella:{id:"1519692933481-e162a57d6721", by:"Osman Rana",      u:"osmanrana",      s:"GXEZuWo5m4I"},
+  snow:    {id:"1457269449834-928af64c684d", by:"Aaron Burden",    u:"aaronburden",    s:"5AiWn2U10cw"},
+  leaves:  {id:"1516700675895-b2e35cae333c", by:"Greg Shield",     u:"gregshield",     s:"kAc0En1s1h8"},
+  clothes: {id:"1540221652346-e5dd6b50f3e7", by:"Fujiphilm",       u:"fujiphilm",      s:"ojZ4wJNUM5w"},
+  holiday: {id:"1535262412227-85541e910204", by:"dharmendra sahu", u:"d1280",          s:"Ia2Kjtrx8y4"},
+  winter:  {id:"1480497490787-505ec076689f", by:"Tim Stief",       u:"timstief",       s:"YFFGkE3y4F8"},
+  knife:   {id:"1588597575483-f4e43e191c94", by:"Igor bispo",      u:"eusouigorbispo", s:"sV5JRC3t71M"},
+  pillow:  {id:"1617325247661-675ab4b64ae2", by:"Deconovo",        u:"deconovo",       s:"gVKmonDbotU"},
+  bumpy:   {id:"1511991095822-5637dcf1365e", by:"Patrick Hendry",  u:"worldsbetweenlines", s:"tVDbmmA_nso"}
+};
+const RAW = [
+["Tam benlik!","Totally for me / right up my alley / just my cup of tea!"],
+["Yazın","summer","beach"],
+["Özlemek","To miss, to long for"],
+["Serin","cool, chilly"],
+["serinlemek","to cool off"],
+["Tersine","on the contrary, quite the opposite"],
+["ben ise (bense)","As for me, on the other hand"],
+["bunalmak","to be bored, get depressed, to be overwhelmed"],
+["terlemek","to sweat, perspire"],
+["Yağabilir","It might rain","rain"],
+["Şemsiye","Umbrella","umbrella"],
+["Yanıma","Next to me, by my side"],
+["Hava durumuna","Weather forecast"],
+["Kar","snow, profit","snow"],
+["Olunca","When, when it becomes"],
+["Bir kaç","several, a few"],
+["yapraklar","leaves","leaves"],
+["Sararıyor","To turn yellow","leaves"],
+["dökülmek","to spill, to pour, to fall"],
+["kıyafetler","clothes","clothes"],
+["Kısmı","Part"],
+["nerede kalmıştık?","Where were we?"],
+["aydınlık","bright, light"],
+["keşke","if only, I wish"],
+["tatil","holiday, vacation","holiday"],
+["galiba","perhaps, probably, I suppose"],
+["Yağmak","to rain, to snow, to pour down","rain"],
+["Sayede","Thanks to, because of, by means of"],
+["Kışın","Winter","winter"],
+["Boş yapmak","To talk nonsense"],
+["alçak gönüllü","humble, modest"],
+["gururlu","with pride; proud"],
+["Boşaltmak","to empty, drain"],
+["Cömert","generous, open handed"],
+["cimri","stingy, ungenerous"],
+["Dürüst","honest and straightforward"],
+["Yalancı","liar, dishonest"],
+["Sabırlı","Patient"],
+["sabırsız","impatient"],
+["cesur","brave; bold; courageous"],
+["Uysal","submissive, compliant"],
+["samimi","sincere, warm"],
+["Yapmacık","artificial, unnatural, fake"],
+["bencil","selfish"],
+["Fedakâr","self-sacrificing"],
+["nazik/kibar","kind, courteous, gentle"],
+["kaba","Rude, rough, coarse"],
+["Yumuşak","Gentle, mild, soft","pillow"],
+["Sert","Harsh, tough, stiff"],
+["Yardımsever","helpful"],
+["Ilgisiz","indifferent, uninterested"],
+["-sever","Fond of / inclined to help ____"],
+["sevecen","lovely, friendly"],
+["Anlayışlı","understanding"],
+["Anlayışsız","Not understanding"],
+["Sert","Hard, firm, stiff, harsh"],
+["keskin","sharp","knife"],
+["Küt / Kör","Dull, blunt"],
+["Pürüzsüz","Smooth, unblemished"],
+["Pürüzlü","rough"],
+["Düz","flat, level, smooth; straight"],
+["engebeli arazi","bumpy ride","bumpy"],
+["Bu yastık inanılmaz yumuşak, hemen uyuyabilirim.","This pillow is unbelievably soft, I could fall asleep immediately.","pillow"]
+];
+const BASE = RAW.map(([t,d,p],i)=>({n:i+1,t,d,photo:p?P[p]:null}));
+let cards = BASE.slice(), mode="browse", onlyImg=false, flipped=new Set();
+let store = {}; try{ store = JSON.parse(localStorage.getItem("imgs")||"{}"); }catch(e){}
+const save = ()=>{ try{ localStorage.setItem("imgs",JSON.stringify(store)); }catch(e){} };
+const $ = s=>document.querySelector(s);
+const key = c=>c.t+"|"+c.d;
+const imgUrl = c=>{
+  if(store[key(c)]) return {src:store[key(c)]};
+  if(c.photo) return {src:`https://images.unsplash.com/photo-${c.photo.id}?auto=format&fit=crop&w=800&h=500&q=75`, p:c.photo};
+  return null;
+};
+function creditEl(p){
+  const a=document.createElement("a"); a.className="credit"; a.target="_blank"; a.rel="noopener";
+  a.href=`https://unsplash.com/photos/${p.s}?utm_source=study_prototype&utm_medium=referral`;
+  a.textContent="Photo: "+p.by+" / Unsplash"; a.onclick=e=>e.stopPropagation(); return a;
+}
+function imgBox(c){
+  const d=document.createElement("div"), im=imgUrl(c);
+  if(im){ d.className="img"; d.style.backgroundImage=`url("${im.src}")`; if(im.p) d.appendChild(creditEl(im.p)); }
+  else { d.className="img empty"; d.textContent="No photo yet"; }
+  return d;
+}
+function visible(){
+  const q=$("#q").value.trim().toLowerCase();
+  return cards.filter(c=>(!q||c.t.toLowerCase().includes(q)||c.d.toLowerCase().includes(q))&&(!onlyImg||imgUrl(c)));
+}
+function renderBrowse(){
+  const g=$("#browse"); g.innerHTML="";
+  const list=visible();
+  $("#sub").textContent=`${cards.length} cards · ${cards.filter(imgUrl).length} with photos · showing ${list.length}`;
+  list.forEach(c=>{
+    const el=document.createElement("div"); el.className="card"+(flipped.has(key(c))?" flip":"");
+    const inner=document.createElement("div"); inner.className="inner";
+    const f=document.createElement("div"); f.className="face";
+    const box=imgBox(c); const num=document.createElement("span"); num.className="num"; num.textContent=c.n; box.appendChild(num);
+    const term=document.createElement("div"); term.className="term"; term.textContent=c.t;
+    f.append(box,term);
+    const tools=document.createElement("div"); tools.className="tools";
+    const find=document.createElement("a"); find.className="btn"; find.target="_blank"; find.rel="noopener";
+    find.href="https://unsplash.com/s/photos/"+encodeURIComponent(c.d.split(/[,;/]/)[0].trim()); find.textContent="Find photo";
+    find.onclick=e=>e.stopPropagation();
+    const set=document.createElement("button"); set.textContent="Set URL";
+    set.onclick=e=>{ e.stopPropagation(); const u=prompt("Paste an image URL for this card (leave empty to remove):"); if(u===null) return; if(u.trim()) store[key(c)]=u.trim(); else delete store[key(c)]; save(); renderBrowse(); };
+    tools.append(find,set); f.appendChild(tools);
+    const b=document.createElement("div"); b.className="face back";
+    const def=document.createElement("div"); def.className="def"; def.textContent=c.d; b.appendChild(def);
+    inner.append(f,b); el.appendChild(inner);
+    el.onclick=()=>{ el.classList.toggle("flip"); const k=key(c); flipped.has(k)?flipped.delete(k):flipped.add(k); };
+    g.appendChild(el);
+  });
+}
+// Quiz
+let qs=null;
+function newQuiz(){
+  const pool=cards.slice().sort(()=>Math.random()-.5);
+  qs={order:pool,i:0,score:0,answered:false};
+  renderQuiz();
+}
+function renderQuiz(){
+  const el=$("#quiz"); el.innerHTML="";
+  if(!qs) return newQuiz();
+  if(qs.i>=qs.order.length){
+    el.innerHTML=`<div class="qcard"><div class="qterm">Done: ${qs.score} / ${qs.order.length}</div><div class="opts"><button class="primary" id="again">Play again</button></div></div>`;
+    $("#again").onclick=newQuiz; return;
+  }
+  const c=qs.order[qs.i];
+  const others=cards.filter(x=>x.d!==c.d).sort(()=>Math.random()-.5).slice(0,3);
+  const opts=[c,...others].sort(()=>Math.random()-.5);
+  const meta=document.createElement("div"); meta.className="meta";
+  meta.innerHTML=`<span>Question ${qs.i+1} of ${qs.order.length}</span><span>Score ${qs.score}</span>`;
+  const card=document.createElement("div"); card.className="qcard";
+  const im=imgUrl(c); if(im){ const b=imgBox(c); card.appendChild(b); }
+  const t=document.createElement("div"); t.className="qterm"; t.textContent=c.t; card.appendChild(t);
+  const wrap=document.createElement("div"); wrap.className="opts";
+  qs.answered=false;
+  opts.forEach(o=>{
+    const b=document.createElement("button"); b.className="opt"; b.textContent=o.d;
+    b.onclick=()=>{
+      if(qs.answered) return; qs.answered=true;
+      const right=o.d===c.d; if(right) qs.score++;
+      b.classList.add(right?"ok":"bad");
+      if(!right) [...wrap.children].forEach(x=>{ if(x.textContent===c.d) x.classList.add("ok"); });
+      const nx=document.createElement("button"); nx.className="primary"; nx.textContent=qs.i+1>=qs.order.length?"Finish":"Next";
+      nx.onclick=()=>{ qs.i++; renderQuiz(); }; wrap.appendChild(nx);
+    };
+    wrap.appendChild(b);
+  });
+  card.appendChild(wrap); el.append(meta,card);
+}
+function setMode(m){
+  mode=m; $("#m-browse").classList.toggle("on",m==="browse"); $("#m-quiz").classList.toggle("on",m==="quiz");
+  $("#browse").classList.toggle("hidden",m!=="browse"); $("#quiz").classList.toggle("hidden",m!=="quiz");
+  $("#q").classList.toggle("hidden",m!=="browse"); $("#only-img").classList.toggle("hidden",m!=="browse");
+  if(m==="quiz") newQuiz(); else renderBrowse();
+}
+$("#m-browse").onclick=()=>setMode("browse");
+$("#m-quiz").onclick=()=>setMode("quiz");
+$("#q").oninput=renderBrowse;
+$("#only-img").onclick=e=>{ onlyImg=!onlyImg; e.target.classList.toggle("on",onlyImg); renderBrowse(); };
+$("#imp-go").onclick=()=>{
+  const rows=$("#imp").value.split(/\r?\n/).map(l=>l.split("\t")).filter(r=>r.length>=2&&r[0].trim()&&r[1].trim());
+  if(!rows.length){ alert("No tab-separated rows found."); return; }
+  cards=rows.map((r,i)=>({n:i+1,t:r[0].trim(),d:r[1].trim(),photo:null}));
+  flipped.clear(); setMode("browse");
+};
+$("#imp-reset").onclick=()=>{ cards=BASE.slice(); flipped.clear(); setMode("browse"); };
+setMode("browse");
+</script>
+</body>
+</html>
